@@ -21,6 +21,11 @@ The network IO can be solved by using non blocking io (asyncio) with the httpx c
 If multiple workers are issued simultaneously, multiple downloads can take place at the same time. However all workers share the same thread and can wait for eachother if CPU is a bottleneck.
 If CPU where to be a bottleneck, multiple process could be spun up with a subset of the work.
 
+# Test environment
+laptop ( plugged in during testing)
+Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz   2.60 GHz
+16,0 GB
+Wi-Fi connection
 
 
 # Results
