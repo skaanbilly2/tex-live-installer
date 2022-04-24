@@ -1,4 +1,4 @@
-# tex-installer-py
+# tex-live-installer
 Texlive package install script in python
 
 
@@ -22,10 +22,11 @@ If multiple workers are issued simultaneously, multiple downloads can take place
 If CPU where to be a bottleneck, multiple process could be spun up with a subset of the work.
 
 # Test environment
-laptop ( plugged in during testing)
-Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz   2.60 GHz
-16,0 GB
-Wi-Fi connection
+- laptop (plugged in during testing)
+- Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz   2.60 GHz
+- 16,0 GB
+- Wi-Fi connection
+- Python 3.7.9
 
 
 # Results
