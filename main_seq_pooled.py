@@ -18,7 +18,7 @@ def downloader():
         containers = get_containers()
         random.shuffle(containers)
         for (url, hash, directory) in containers:
-            download_client(url=url, hash=hash, directory=directory, client=client)
+            download_client(client=client, url=url, hash=hash, directory=directory)
 
 
 def main():

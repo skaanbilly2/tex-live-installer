@@ -26,7 +26,7 @@ async def worker_async(queue, client):
 
         logger.info((packagename, hash, directory))
         await download_async_client(
-            url=packagename, hash=hash, directory=directory, client=client
+            client=client, url=packagename, hash=hash, directory=directory
         )
         queue.task_done()
         i += 1
