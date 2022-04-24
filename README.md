@@ -1,4 +1,4 @@
-# tex-installer-py
+# tex-live-installer
 Texlive package install script in python
 
 
