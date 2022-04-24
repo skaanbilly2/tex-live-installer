@@ -1,4 +1,5 @@
 import json
+import pathlib
 
 
 def extract(f):
@@ -33,12 +34,8 @@ def extract(f):
     return packages
 
 
-def main():
-    with open("texlive.tlpdb.txt", encoding="utf-8") as f:
+def extract_file(infile: pathlib.Path, outfile: pathlib.Path):
+    with open(infile, encoding="utf-8") as f:
         packages = extract(f)
-        with open("input.json", "w") as f:
+        with open(outfile, "w") as f:
             json.dump(packages, f)
-
-
-if __name__ == "__main__":
-    main()
