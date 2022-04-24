@@ -5,8 +5,8 @@ logger = logging.getLogger(__name__)
 import concurrent.futures
 
 
-from reader import get_containers
-from download import download
+from helpers.reader import get_containers
+from helpers.download import download
 
 
 def downloader_async(max_parrallel_req = 8):

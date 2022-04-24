@@ -5,8 +5,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-from reader import get_containers
-from download import download_async, download_async_multiple
+from helpers.reader import get_containers
+from helpers.download import download_async, download_async_multiple
 
 
 from fs.memoryfs import MemoryFS

@@ -1,8 +1,8 @@
 import httpx
 import pathlib
 import traceback
-from hash import sha512
-from archive import extract_data
+from helpers.hash import sha512
+from helpers.archive import extract_data
 import time
 
 from logging import getLogger

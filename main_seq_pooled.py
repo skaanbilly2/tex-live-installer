@@ -8,8 +8,8 @@ logging.basicConfig(level=logging.CRITICAL)
 logger = logging.getLogger(__name__)
 
 
-from reader import get_containers
-from download import download_client
+from helpers.reader import get_containers
+from helpers.download import download_client
 
 
 def downloader():

@@ -6,8 +6,8 @@ logger = logging.getLogger(__name__)
 import httpx
 
 
-from reader import get_containers
-from download import download_async, download_async_client
+from helpers.reader import get_containers
+from helpers.download import download_async, download_async_client
 
 
 from fs.memoryfs import MemoryFS

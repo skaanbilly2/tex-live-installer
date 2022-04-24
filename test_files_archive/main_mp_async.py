@@ -10,8 +10,8 @@ import multiprocessing
 import pathlib
 
 
-from hash import sha512
-from reader import get_containers
+from helpers.hash import sha512
+from helpers.reader import get_containers
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
