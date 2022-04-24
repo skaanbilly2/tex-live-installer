@@ -62,21 +62,21 @@ downloading took 183.46342825889587 seconds
 
 
 ## Async Pooled (main_async_pooled_all)
-| Number of workers  |     seconds     | Speedup | Installed size/s|
+| Number of workers  |     seconds     | Speedup | Installed size/s |
 |----------|:-------------:|:-------------:|------:|
-| 1| 114.89 | 60%| 2.4 MB/s |
+| 1 | 114.89 | 60% | 2.4 MB/s |
 | 8 | 66.11886239051819 | 177% | 4.3 MB/s |
-| 20 | 59.47248697280884 | 210%| 4.7 MB/s|
+| 20 | 59.47248697280884 | 210% | 4.7 MB/s|
 
 
 The use of asynchronous calls allows us to speedup the 
 
 ## All results
-|Name| Number of workers  |     seconds     | Speedup | MB/s| Notes|
+| Name | Number of workers  |     seconds     | Speedup |  Installed size/s | Notes |
 |----------|:-------------:|:-------------:|:-------------:|:-------------:|------:|
-| texlive gui installer | ? | ? | ? | 0.6 MB/s | Different internet connection| 
-| Sequential pooled( baseline) | 1| 183.46 | 0| 1.5 MB/| |
-| Async Pooled | 1| 114.89 | 60%|2.4 MB/s | |
+| texlive gui installer | ? | ? | ? | 0.6 MB/s | Different internet connection | 
+| Sequential pooled( baseline) | 1 | 183.46 | 0 | 1.5 MB/| |
+| Async Pooled | 1 | 114.89 | 60% |2.4 MB/s | |
 | Async Pooled | 8 | 66.11886239051819 | 177% |  4.3 MB/s | |
 | Async Pooled  | 20 | 59.47248697280884 | 210%| 4.7 MB/s| |
 
