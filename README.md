@@ -10,7 +10,7 @@ Texlive package install script in python
 To eliminate disk performance I used a ramdisk as the final destination of an extracted archive.
 
 To see if CPU would be a bottleneck I checked the timings of network IO vs hash + extract write
-In this scenario the proportion of time spent downloading was mostly in the high 90s, for big packages this could be lower.
+In this scenario the proportion of time spent downloading was mostly more than 90% for big packages this could be lower.
 
 The network IO can be solved by using non blocking io (asyncio) with the httpx client library, which allows multiple downloads to take place concurrently. To further eliminate overhead of setting up TCP connections I used the same asyncclient for all downloads, which automatically reuses the tcp socket.
 
