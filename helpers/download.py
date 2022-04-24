@@ -6,12 +6,15 @@ from helpers.archive import extract_data
 import time
 
 from logging import getLogger
+
 logger = getLogger(__name__)
 
-class TimeTracker():
+
+class TimeTracker:
     def __init__(self) -> None:
         self.time = time.time()
         self.tasks = []
+
     def task_done(self, name):
         new_time = time.time()
         self.tasks.append((new_time - self.time, name))
@@ -24,9 +27,8 @@ class TimeTracker():
             logger.info(f"task {name} took {100*time/tot_time}% of time")
 
 
-
-async def download_async(url:str, hash:str, directory:pathlib.Path):    
-    tracker = TimeTracker()   
+async def download_async(url: str, hash: str, directory: pathlib.Path):
+    tracker = TimeTracker()
     async with httpx.AsyncClient() as client:
         logger.debug(f"retrieving {url}")
         response = await client.get(url)
@@ -44,8 +46,9 @@ async def download_async(url:str, hash:str, directory:pathlib.Path):
         except Exception:
             traceback.print_exc()
 
-async def download_async_client(url:str, hash:str, directory:pathlib.Path, client):    
-    tracker = TimeTracker()   
+
+async def download_async_client(url: str, hash: str, directory: pathlib.Path, client):
+    tracker = TimeTracker()
     logger.debug(f"retrieving {url}")
     response = await client.get(url)
     data = response.read()
@@ -66,7 +69,7 @@ async def download_async_client(url:str, hash:str, directory:pathlib.Path, clien
 async def download_async_multiple(tasks):
     async with httpx.AsyncClient() as client:
         for (url, hash, directory) in tasks:
-            tracker = TimeTracker()   
+            tracker = TimeTracker()
             logger.debug(f"retrieving {url}")
             response = await client.get(url)
             data = response.read()
@@ -84,15 +87,15 @@ async def download_async_multiple(tasks):
                 traceback.print_exc()
 
 
-def download(url:str, hash:str, directory:pathlib.Path): 
-    tracker = TimeTracker()          
+def download(url: str, hash: str, directory: pathlib.Path):
+    tracker = TimeTracker()
     with httpx.Client() as client:
         logger.debug(f"retrieving {url}")
         response = client.get(url)
-        
+
         data = response.read()
         logger.debug("hashing")
-        hash_message = sha512(data)    
+        hash_message = sha512(data)
         tracker.task_done("get response + hash")
 
         try:
@@ -105,15 +108,15 @@ def download(url:str, hash:str, directory:pathlib.Path):
             traceback.print_exc()
 
 
-def download_client(url:str, hash:str, directory:pathlib.Path, client): 
-    tracker = TimeTracker()          
+def download_client(url: str, hash: str, directory: pathlib.Path, client):
+    tracker = TimeTracker()
     with httpx.Client() as client:
         logger.debug(f"retrieving {url}")
         response = client.get(url)
-        
+
         data = response.read()
         logger.debug("hashing")
-        hash_message = sha512(data)    
+        hash_message = sha512(data)
         tracker.task_done("get response + hash")
 
         try:

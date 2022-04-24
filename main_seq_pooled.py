@@ -19,14 +19,13 @@ def downloader():
         random.shuffle(containers)
         for (url, hash, directory) in containers:
             download_client(url=url, hash=hash, directory=directory, client=client)
-        
-
 
 
 def main():
     start = time.time()
     downloader()
     print(f"downloading took {time.time() - start}")
+
 
 if __name__ == "__main__":
     main()

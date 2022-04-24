@@ -1,6 +1,7 @@
 import asyncio
 import time
 import logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -10,12 +11,10 @@ from helpers.download import download_async, download_async_multiple
 
 
 from fs.memoryfs import MemoryFS
+
 mem_fs = MemoryFS()
 import httpx
 
-
-
-        
 
 async def worker_async(queue):
     i = 0
@@ -27,13 +26,13 @@ async def worker_async(queue):
                 return
             logger.debug(i)
             (packagename, hash, directory) = res
-            
+
             logger.info((packagename, hash, directory))
-            await download_async(url=packagename, hash=hash, directory=directory, client=client)
+            await download_async(
+                url=packagename, hash=hash, directory=directory, client=client
+            )
             queue.task_done()
             i += 1
-        
-
 
 
 async def downloader_async():

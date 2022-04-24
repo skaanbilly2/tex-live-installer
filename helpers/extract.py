@@ -1,20 +1,18 @@
 import json
 
+
 def extract(f):
     packages = []
-    state = {
-
-    }
+    state = {}
     for line in f:
         if line == " /n":
             state = {}
             continue
         if line[0] == " ":
             continue
-        
+
         words = line.strip().split(" ")
         tag = words[0]
-
 
         if tag == "name":
             if state.get("category", None) == "Package" and state != {}:
@@ -33,7 +31,6 @@ def extract(f):
             state[tag] = words[1]
 
     return packages
-
 
 
 def main():
