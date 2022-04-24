@@ -1,23 +1,17 @@
 import asyncio
 import time
 import logging
-logging.basicConfig(level=logging.CRITICAL)
-logger = logging.getLogger(__name__)
-import httpx
 import random
 
-
-from helpers.reader import get_containers
-from helpers.download import download_async, download_async_client
-
-
-from fs.memoryfs import MemoryFS
-mem_fs = MemoryFS()
 import httpx
 
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-        
+from helpers.reader import get_containers
+from helpers.download import download_async_client
+
 
 async def worker_async(queue, client):
     i = 0

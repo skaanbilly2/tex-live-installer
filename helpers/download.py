@@ -38,7 +38,7 @@ async def download_async(url:str, hash:str, directory:pathlib.Path):
         try:
             assert hash_message == hash
             logger.debug("extracting archive")
-            extract_data(hash, data, directory)
+            extract_data(data, directory)
             tracker.task_done("Extract and write")
             tracker.report()
         except Exception:
@@ -56,7 +56,7 @@ async def download_async_client(url:str, hash:str, directory:pathlib.Path, clien
     try:
         assert hash_message == hash
         logger.debug("extracting archive")
-        extract_data(hash, data, directory)
+        extract_data(data, directory)
         tracker.task_done("Extract and write")
         tracker.report()
     except Exception:
@@ -77,7 +77,7 @@ async def download_async_multiple(tasks):
             try:
                 assert hash_message == hash
                 logger.debug("extracting archive")
-                extract_data(hash, data, directory)
+                extract_data(data, directory)
                 tracker.task_done("Extract and write")
                 tracker.report()
             except Exception:
@@ -98,7 +98,7 @@ def download(url:str, hash:str, directory:pathlib.Path):
         try:
             assert hash_message == hash
             logger.debug("extracting archive")
-            extract_data(hash, data, directory)
+            extract_data(data, directory)
             tracker.task_done("Extract and write")
             tracker.report()
         except Exception:
@@ -119,7 +119,7 @@ def download_client(url:str, hash:str, directory:pathlib.Path, client):
         try:
             assert hash_message == hash
             logger.debug("extracting archive")
-            extract_data(hash, data, directory)
+            extract_data(data, directory)
             tracker.task_done("Extract and write")
             tracker.report()
         except Exception:

@@ -1,10 +1,11 @@
 import random
 import time
 import logging
+
 import httpx
 
 
-logging.basicConfig(level=logging.CRITICAL)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
