@@ -50,5 +50,10 @@ def download_client(client: Client, task: DownloadTask):
             extract_data(data, task.target_dir)
             tracker.task_done("Extract and write")
             tracker.report()
+        except AssertionError:
+            logger.critical(
+                f"{task}: found hash message {repr(hash_message)}, expected hash {repr(task.hash)}"
+            )
+
         except Exception:
             traceback.print_exc()

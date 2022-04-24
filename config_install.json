@@ -1,0 +1,8 @@
+{
+    "installdir": "tex_output/",
+    "inputfile": "packages.json",
+    "mirror_base_url": "https://mirror.kumi.systems/ctan/systems/texlive/tlnet/archive",
+    "n_packages": 20,
+    "asyncio": "False",
+    "n_workers": 1
+}

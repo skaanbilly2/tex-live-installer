@@ -4,26 +4,21 @@ from typing import List
 
 import httpx
 
-logger = logging.getLogger(__name__)
-
 from tex_live_installer.helpers.download import download_async_client
 from tex_live_installer.datastructures.downloadtask import DownloadTask
 
+logger = logging.getLogger(__name__)
+
 
 async def worker_async(queue, client):
-    i = 0
-
     while True:
         res: DownloadTask = await queue.get()
         if res is None:
             # Notify the queue that the "work item" has been processed.
             return
-        logger.debug(i)
 
-        logger.info(res)
         await download_async_client(client=client, task=res)
         queue.task_done()
-        i += 1
 
 
 async def downloader_async(containertasks: List[DownloadTask], max_parrallel_req=8):

@@ -91,3 +91,38 @@ The use of asynchronous calls allows us to use concurrent downloads as well as a
 
 
 
+# Install
+Make sure you have a python version >= 3.7
+```
+pip install -r requirements.txt
+```
+# Cli-tool
+
+A small cli-tool to easily experiment with this installer.
+
+
+## Usage
+```
+usage: python main.py [-h] [--configfile CONFIGFILE] [--inputfile INPUTFILE]
+                      [--installdir INSTALLDIR] [--outputfile OUTPUTFILE]
+                      [--mirror_base_url MIRROR_BASE_URL]
+                      [--n_packages N_PACKAGES] [--reshuffle {True,False}]
+                      [--asyncio {True,False}] [--n_workers N_WORKERS]
+                      {extract_tlpdb,install}
+```
+### Configfile
+The command will run with the defaults given in `CONFIGFILE` possibly overridden with command line parameters.
+
+The `CONFIGFILE` can be used to specify a different path to the configfile. If not specified these defaults will be used:
+```
+DEFAULT_CONFIG_FILE_INSTALL = "config_install.json"
+DEFAULT_CONFIG_FILE_EXTRACT = "config_extract.json"
+```
+
+### Extract_tlpdb
+
+The `extract_tlpdb` command is used to read a tlpdb.txt file and translate it into a json file with the appropriate information to download. This essentially creates the packages.json (`OUTPUTFILE`) file from texlive.tlpdb.txt (`INPUTFILE`). 
+
+
+### Install
+The `install` command installs `N_PACKAGES` packages given in the `INPUTFILE` to the `INSTALLDIR`. It fetches them from the `MIRROR_BASE_URL` site. It does this asynchronously with `n_workers` is `asyncio` is set to true. Otherwise a sequential method is used. The `reshuffle` parameter determines if the packages are reshuffled before selecting `N_PACKAGES` from it, disable this for accurate performance result samples, enable this for increased performance in practice.
