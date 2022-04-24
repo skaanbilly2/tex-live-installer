@@ -1,11 +1,10 @@
-from email.policy import default
 import json
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 packages_dict = []
-with open("input.json") as inputfile:
+with open("packages.json") as inputfile:
     packages_dict = json.load(inputfile)
 
 
