@@ -24,6 +24,8 @@ If CPU where to be a bottleneck, multiple process could be spun up with a subset
 
 
 # Results
+Note: At the moment I have not redid any of these test, as such some variation on these can be expected.
+
 ## Baseline
 300 containers (randomly shuffled) Installed size 282 MB
 
