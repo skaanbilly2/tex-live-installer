@@ -27,15 +27,15 @@ If CPU where to be a bottleneck, multiple process could be spun up with a subset
 Note: At the moment I have not redid any of these test, as such some variation on these can be expected.
 
 ## Baseline
-300 containers (randomly shuffled) Installed size 282 MB
+Test: 300 containers (randomly shuffled) Installed size 282 MB
 
-Full install  Installed size 7,18 GB 
+Full install  Installed size 7,18 GB (~= 4300 containers)
 
-my experience
-~= 4300 containers 3 hours 20 min  ==> 12000 seconds
-==> 2.8 seconds / container
-==> 0.6MB (installed size) / second
 
+texlive gui installer (full install)
+|    seconds     | Seconds/container | Installed size/s| 
+|:-------------:|:-------------:|-------------:|
+| 12000 | 2.8 |  0.6 MB/s |
 
 Note: from now on MB/sec will refer to installed size/sec unless indicated otherwise.
 
@@ -50,10 +50,9 @@ My internet connection used in the following experiments can do about 50Mb/secon
 ## Sequential  Pooled (main_seq_pooled)
 This is the baseline, should be comparable to the time for the installer
 
-downloading took 183.46342825889587 seconds
-==> 0.6 seconds / container
-==> 1.5MB / second
-
+|    seconds     | Seconds/container | Installed size/s| 
+|:-------------:|:-------------:|-------------:|
+| 183.46 | 0.6 |  1.5 MB/s |
 
 
 
@@ -71,7 +70,7 @@ downloading took 183.46342825889587 seconds
 | 20 | 59.47248697280884 | 210% | 4.7 MB/s|
 
 
-The use of asynchronous calls allows us to speedup the 
+The use of asynchronous calls allows us to use concurrent downloads as well as avoid using cpu time waiting.
 
 ## All results
 | Name | Number of workers  |     seconds     | Speedup |  Installed size/s | Notes |
