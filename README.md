@@ -56,12 +56,17 @@ My internet connection during the install could do about 16Mb/second (2 MB/sec)
 
 
 ## Sequential  Pooled (main_seq_pooled)
-This is the baseline, should be comparable to the time for the installer
+This is the baseline, which should be comparable to the time for the installer
 
 |    seconds     | Seconds/container | Installed size/s|  Drive | Network bandwith | Notes |
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|-------------:|
+ 230.41 | 0.76 |  1.22 MB/s | SSD | 16 Mbps | |
+ |
+ | 207.59 | 0.7 |  1.36 MB/s | Ramdisk | 16 Mbps | |
 | 183.46 | 0.6 |  1.5 MB/s | Ramdisk | 50 Mbps | |
-| 207.59 | 0.7 |  1.36 MB/s | Ramdisk | 16 Mbps | |
+
+|
+
 
 
 
@@ -74,40 +79,52 @@ This is the baseline, should be comparable to the time for the installer
 The use of asynchronous calls allows us to use concurrent downloads as well as avoid using cpu time waiting.
 
 
-Note: speedup (based on time) relative to the sync pooled scenario with 1 worker.
-### 50 Mbps internet connection
+### 16 Mbps internet connection
+The 20 workers scenario with a 16 Mbps was not tested due to a limited bandwith causing the downloads to timeout. This can be resolved in multiple ways. 
+
+#### Ramdisk
+| Number of workers  |     seconds     | Speedup | Installed size/s | Drive | Network bandwith | Notes |
+|----------|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|------:|
+| 1 | 162.69 | 100% | 1.7 MB/s | Ramdisk | 16 Mbps
+| 8 |  93.28 | 174% | 3.0 MB/s | Ramdisk | 16 Mbps
+
+
+#### SSD
+| Number of workers  |     seconds     | Speedup | Installed size/s | Drive | Network bandwith | Notes |
+|----------|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|------:|
+| 1 | 155.20 | 100% | 1.8 MB/s | SSD | 16 Mbps
+| 8 | 99.65 | 156% | 2.83 MB/s | SSD | 16 Mbps
+
+
+
+### 50 Mbps internet connection - Ramdisk
 | Number of workers  |     seconds     | Speedup | Installed size/s | Drive | Network bandwith | Notes |
 |----------|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|------:|
 | 1 | 114.89 | 100% | 2.4 MB/s |  Ramdisk | 50 Mbps
 | 8 | 66.13  | 177% | 4.3 MB/s | Ramdisk | 50 Mbps
 | 20 | 59.47 | 210% | 4.7 MB/s| Ramdisk | 50 Mbps
 
-### 16 Mbps internet connection
-The 20 workers scenario was not tested due to a limited bandwith causing the downloads to timeout. This can be resolved in multiple ways. 
-| Number of workers  |     seconds     | Speedup | Installed size/s | Drive | Network bandwith | Notes |
-|----------|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|------:|
-| 1 | 162.69 | 100% | 1.7 MB/s | Ramdisk | 16 Mbps
-| 8 |  93.28 | 174% | 3.0 MB/s | Ramdisk | 16 Mbps
-
 ## All results
-Here we can see a speedup of about 5x can be attained using this approach compared to the texlive gui approach. This could transform the 3 hours and 20 minutes install time into about 40 minutes, without sacrificing the flexibility of the installer in comparison to the iso-based install approach.
-
-
 Note: Speedup (based on Installed size/s) relative to the texlive gui installer 
 | Name | Number of workers  |     seconds     | Speedup |  Installed size/s | Drive | Network bandwith | Notes |
 |----------|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|------:|
-| texlive gui installer | ? | 12000 | 100% | 0.6 MB/s | SSD |16 Mbps | FULL INSTALL| 
-||||||
-| Sequential pooled( baseline) | 1 | 207.59 | 226% | 1.36 MB/s| Ramdisk | 16 Mbps |
-| Sequential pooled( baseline) | 1 | 183.46 | 250% | 1.5 MB/| Ramdisk | 50 Mbps |
-||||||
-|  Async Pooled| 1 | 162.69 | 283% | 1.7 MB/s | Ramdisk | 16 Mbps | |
-| Async Pooled | 8 |  93.28 | 500% | 3.0 MB/s | Ramdisk | 16 Mbps | |
-||||||
-| Async Pooled | 1 | 114.89 | 400% |2.4 MB/s | Ramdisk | 50 Mbps | |
-| Async Pooled | 8 | 66.12 | 717% |  4.3 MB/s | Ramdisk | 50 Mbps | |
-| Async Pooled  | 20 | 59.47 | 783%| 4.7 MB/s| Ramdisk | 50 Mbps | |
-||||||
+| texlive gui installer | ? | 12000 | 100% | 0.6 MB/s | SSD | 16 Mbps | FULL INSTALL (3h 20m)
+|
+| Sequential pooled( baseline) | 1 | 230.41 | 203% | 1.22 MB/s | SSD | 16 Mbps
+|
+| Sequential pooled( baseline) | 1 | 207.59 | 226% | 1.36 MB/s | Ramdisk | 16 Mbps
+| Sequential pooled( baseline) | 1 | 183.46 | 250% | 1.50 MB/s | Ramdisk | 50 Mbps
+|
+| Async Pooled | 1  | 155.20 | 300% | 1.80 MB/s | SSD | 16 Mbps
+| Async Pooled | 8  | 99.65  | 471% | 2.83 MB/s | SSD | 16 Mbps
+| 
+| Async Pooled | 1  | 162.69 | 283% | 1.70 MB/s | Ramdisk | 16 Mbps 
+| Async Pooled | 8  |  93.28 | 500% | 3.00 MB/s | Ramdisk | 16 Mbps 
+|
+| Async Pooled | 1  | 114.89 | 400% | 2.40 MB/s | Ramdisk | 50 Mbps 
+| Async Pooled | 8  | 66.12  | 717% | 4.30 MB/s | Ramdisk | 50 Mbps 
+| Async Pooled | 20 | 59.47  | 783% | 4.70 MB/s | Ramdisk | 50 Mbps 
+|
 
 ## Remarks
 During testing, periods of network inactivity were found during the install, even in the asynchronous case. This leads me to believe that for the bigger containers a higher hash and extraction time stalls the other threads. Hence even a higher speedup could be attained, however this increases complexity.
@@ -117,8 +134,7 @@ To alleviate this I would propose a splitting in work depending on the container
 
 
 ## Conclusion
-Compared to the gui installer a simple 
-
+We can see a speedup of about 4-5x can be attained using this approach compared to the texlive gui approach. This could transform the 3 hours and 20 minutes install time into about 40-50 minutes, without sacrificing the flexibility of the installer in comparison to the iso-based install approach.
 
 
 # Install
