@@ -9,14 +9,12 @@ Texlive package install script in Python
 - CPU 
 - Network IO
 
-To eliminate disk performance I used a ramdisk as the final destination of an extracted archive.
+To eliminate disk performance in tests I used a ramdisk as the final destination of an extracted archive.
 
 To see if CPU would be a bottleneck I checked the timings of network IO vs hash + extract write
 In this scenario the proportion of time spent downloading was mostly more than 90% for big packages this could be lower.
 
 The network IO can be solved by using non blocking io (asyncio) with the httpx client library, which allows multiple downloads to take place concurrently. To further eliminate overhead of setting up TCP connections I used the same asyncclient for all downloads, which automatically reuses the tcp socket.
-
-
 
 
 # Asynchronous workers
@@ -29,7 +27,11 @@ If CPU where to be a bottleneck, multiple process could be spun up with a subset
 - 16,0 GB
 - Wi-Fi connection
 - Python 3.7.9
+- SSD
 
+SSD disk speed:
+
+![Crystaldiskmark SSD bench](/assets/images/SSD.jpg "Speedy SSD")
 
 # Results
 Note: At the moment I have not redid any of these test, as such some variation on these can be expected.
