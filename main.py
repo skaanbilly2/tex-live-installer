@@ -13,6 +13,7 @@ from tex_live_installer.helpers.reader import get_containers
 from tex_live_installer.helpers.extract import extract_file
 from tex_live_installer.downloaders.async_pooled_all import downloader_async
 from tex_live_installer.downloaders.seq_pooled import downloader
+from tex_live_installer.helpers.timetracker import TimeTracker
 
 DEFAULT_CONFIG_FILE_INSTALL = "config_install.json"
 DEFAULT_CONFIG_FILE_EXTRACT = "config_extract.json"
@@ -128,7 +129,10 @@ async def main():
             await time_function(downloader_async, (containertasks, args.n_workers,), asynchronous=args.asyncio, message = f"Asynchronous download of selected {args.n_containers} containers with {args.n_workers} worker ")
         else:
             await time_function(downloader, (containertasks,), message=f"Synchronous download of selected {args.n_containers} containers ")
-
+        
+        # Save timetracker data
+        with open("timings.json", "w") as f:
+            json.dump(TimeTracker.time_measurements, f)
 
 if __name__ == "__main__":
     asyncio.run(main())

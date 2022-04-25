@@ -15,40 +15,42 @@ async def download_async_client(
     client: AsyncClient,
     task: DownloadTask,
 ):
-    tracker = TimeTracker()
+    tracker = TimeTracker(task.name, task.size)
     logger.debug(f"retrieving {task.source_url}")
     response = await client.get(task.source_url)
     data = response.read()
+    tracker.task_done("get")
     logger.debug("hashing")
     hash_message = sha512(data)
-    tracker.task_done("get response + hash")
+    tracker.task_done("hash")
 
     try:
         assert hash_message == task.hash
         logger.debug("extracting archive")
         extract_data(data, task.target_dir)
-        tracker.task_done("Extract and write")
+        tracker.task_done("extract_write")
         tracker.report()
     except Exception:
         traceback.print_exc()
 
 
 def download_client(client: Client, task: DownloadTask):
-    tracker = TimeTracker()
+    tracker = TimeTracker(task.name, task.size, save_timings=True)
     with Client() as client:
         logger.debug(f"retrieving {task.source_url}")
         response = client.get(task.source_url)
 
         data = response.read()
         logger.debug("hashing")
+        tracker.task_done("get")
         hash_message = sha512(data)
-        tracker.task_done("get response + hash")
+        tracker.task_done("hash")
 
         try:
             assert hash_message == task.hash
             logger.debug("extracting archive")
             extract_data(data, task.target_dir)
-            tracker.task_done("Extract and write")
+            tracker.task_done("extract_write")
             tracker.report()
         except AssertionError:
             logger.critical(

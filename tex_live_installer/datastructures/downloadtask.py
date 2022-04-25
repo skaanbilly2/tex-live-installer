@@ -8,3 +8,4 @@ class DownloadTask:
     source_url: str
     target_dir: pathlib.Path
     hash: str = None
+    size:int = 0
