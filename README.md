@@ -86,10 +86,13 @@ The 20 workers scenario was not tested due to a limited bandwith causing the dow
 | 8 |  93.28 | 174% | 3.0 MB/s | 
 
 ## All results
+Here we can see a speedup of about 5x can be attained using this approach compared to the texlive gui approach. This could transform the 3 hours and 20 minutes install time into about 40 minutes, without sacrificing the flexibility of the installer in comparison to the iso-based install approach.
+
+
 Note: Speedup (based on Installed size/s) relative to the texlive gui installer 
 | Name | Number of workers  |     seconds     | Speedup |  Installed size/s | Notes |
 |----------|:-------------:|:-------------:|:-------------:|:-------------:|------:|
-| texlive gui installer | ? | ? | 100% | 0.6 MB/s | 16 Mbps internet connection FULL INSTALL| 
+| texlive gui installer | ? | 12000 | 100% | 0.6 MB/s | 16 Mbps internet connection FULL INSTALL| 
 ||||||
 | Sequential pooled( baseline) | 1 | 207.59 | 226% | 1.36 MB/s| 16 Mbps internet connection |
 | Sequential pooled( baseline) | 1 | 183.46 | 250% | 1.5 MB/| 50 Mbps internet connection |
