@@ -46,21 +46,18 @@ texlive gui installer (full install)
 Note: from now on MB/sec will refer to installed size/sec unless indicated otherwise.
 
 Remarks:
-My internet connection during the install could do about 20Mb/second (2.5 MB/sec)
+My internet connection during the install could do about 16Mb/second (2 MB/sec)
 
 
 
-Remarks:
-My internet connection used in the following experiments can do about 50Mb/second (6.5MB/sec)
 
 ## Sequential  Pooled (main_seq_pooled)
 This is the baseline, should be comparable to the time for the installer
 
-|    seconds     | Seconds/container | Installed size/s| 
-|:-------------:|:-------------:|-------------:|
-| 183.46 | 0.6 |  1.5 MB/s |
-
-
+|    seconds     | Seconds/container | Installed size/s|  Notes |
+|:-------------:|:-------------:|:-------------:|-------------:|
+| 183.46 | 0.6 |  1.5 MB/s | 50 Mbps internet connection |
+| 207.59 | 0.7 |  1.36 MB/s | 16 Mbps internet connection |
 
 
 
@@ -69,25 +66,51 @@ This is the baseline, should be comparable to the time for the installer
 
 
 ## Async Pooled (main_async_pooled_all)
-| Number of workers  |     seconds     | Speedup | Installed size/s |
-|----------|:-------------:|:-------------:|------:|
-| 1 | 114.89 | 60% | 2.4 MB/s |
-| 8 | 66.11886239051819 | 177% | 4.3 MB/s |
-| 20 | 59.47248697280884 | 210% | 4.7 MB/s|
-
 
 The use of asynchronous calls allows us to use concurrent downloads as well as avoid using cpu time waiting.
 
+
+Note: speedup (based on time) relative to the sync pooled scenario with 1 worker.
+### 50 Mbps internet connection
+| Number of workers  |     seconds     | Speedup | Installed size/s |
+|----------|:-------------:|:-------------:|------:|
+| 1 | 114.89 | 100% | 2.4 MB/s |
+| 8 | 66.11886239051819 | 177% | 4.3 MB/s |
+| 20 | 59.47248697280884 | 210% | 4.7 MB/s|
+
+### 16 Mbps internet connection
+The 20 workers scenario was not tested due to a limited bandwith causing the downloads to timeout. This can be resolved in multiple ways. 
+| Number of workers  |     seconds     | Speedup | Installed size/s |
+|----------|:-------------:|:-------------:|------:|
+| 1 | 162.69 | 100% | 1.7 MB/s |
+| 8 |  93.28 | 174% | 3.0 MB/s | 
+
 ## All results
+Note: Speedup (based on Installed size/s) relative to the texlive gui installer 
 | Name | Number of workers  |     seconds     | Speedup |  Installed size/s | Notes |
 |----------|:-------------:|:-------------:|:-------------:|:-------------:|------:|
-| texlive gui installer | ? | ? | ? | 0.6 MB/s | Different internet connection | 
-| Sequential pooled( baseline) | 1 | 183.46 | 0 | 1.5 MB/| |
-| Async Pooled | 1 | 114.89 | 60% |2.4 MB/s | |
-| Async Pooled | 8 | 66.11886239051819 | 177% |  4.3 MB/s | |
-| Async Pooled  | 20 | 59.47248697280884 | 210%| 4.7 MB/s| |
+| texlive gui installer | ? | ? | 100% | 0.6 MB/s | 16 Mbps internet connection FULL INSTALL| 
+||||||
+| Sequential pooled( baseline) | 1 | 207.59 | 226% | 1.36 MB/s| 16 Mbps internet connection |
+| Sequential pooled( baseline) | 1 | 183.46 | 250% | 1.5 MB/| 50 Mbps internet connection |
+||||||
+|  Async Pooled| 1 | 162.69 | 283% | 1.7 MB/s | 16 Mbps internet connection |
+| Async Pooled | 8 |  93.28 | 500% | 3.0 MB/s | 16 Mbps internet connection |
+||||||
+| Async Pooled | 1 | 114.89 | 400% |2.4 MB/s | 50 Mbps internet connection |
+| Async Pooled | 8 | 66.12 | 717% |  4.3 MB/s | 50 Mbps internet connection |
+| Async Pooled  | 20 | 59.47 | 783%| 4.7 MB/s| 50 Mbps internet connection |
+||||||
+
+## Remarks
+During testing, periods of network inactivity were found during the install, even in the asynchronous case. This leads me to believe that for the bigger containers a higher hash and extraction time stalls the other threads. Hence even a higher speedup could be attained, however this increases complexity.
+
+To alleviate this I would propose a splitting in work depending on the containersize. Large containers, asynchronous sequential in a single thread within a proces. Smaller containers could be processed by a group of threads within another process. For example 1 proces with 10 threads where the download time is on average 90 % of the necessary time, 1 proces with 4 threads where the download time is on average 75 percent of the time, 1 proces with 2 threads where the the download time is about half of the necessary time.
 
 
+
+## Conclusion
+Compared to the gui installer a simple 
 
 
 
@@ -106,7 +129,7 @@ A small cli-tool to easily experiment with this installer.
 usage: python main.py [-h] [--configfile CONFIGFILE] [--inputfile INPUTFILE]
                       [--installdir INSTALLDIR] [--outputfile OUTPUTFILE]
                       [--mirror_base_url MIRROR_BASE_URL]
-                      [--n_packages N_PACKAGES] [--reshuffle {True,False}]
+                      [--n_containers N_CONTAINERS] [--reshuffle {True,False}]
                       [--asyncio {True,False}] [--n_workers N_WORKERS]
                       {extract_tlpdb,install}
 ```

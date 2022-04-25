@@ -4,6 +4,7 @@ import asyncio
 import random
 import pathlib
 import json
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,6 +16,15 @@ from tex_live_installer.downloaders.seq_pooled import downloader
 
 DEFAULT_CONFIG_FILE_INSTALL = "config_install.json"
 DEFAULT_CONFIG_FILE_EXTRACT = "config_extract.json"
+
+
+async def time_function(func, args, asynchronous:bool=False, message:str=""):
+    start = time.time()
+    if asynchronous == True:
+        await func(*args)
+    else:
+        func(*args)
+    logger.info(f"{message} took {time.time() - start} seconds")
 
 
 def update_args_from_configfile(args: argparse.Namespace):
@@ -57,7 +67,7 @@ async def main():
 
     ## TEST OPTION
     parser.add_argument(
-        "--n_packages",
+        "--n_containers",
         type=int,
         help="Limits the number of installed packages to the first N",
         default=None,
@@ -103,6 +113,8 @@ async def main():
             args.configfile = DEFAULT_CONFIG_FILE_INSTALL
         args = update_args_from_configfile(args)
 
+        args.asyncio = (args.asyncio == ("True"))
+
         containertasks = get_containers(
             filepath=pathlib.Path(args.inputfile),
             mirror_url=args.mirror_base_url,
@@ -111,11 +123,11 @@ async def main():
 
         if args.reshuffle == "True":
             random.shuffle(containertasks)
-        containertasks = containertasks[: min(len(containertasks), args.n_packages)]
-        if args.asyncio == "True":
-            await downloader_async(containertasks, max_parrallel_req=args.n_workers)
+        containertasks = containertasks[: min(len(containertasks), args.n_containers)]
+        if args.asyncio :
+            await time_function(downloader_async, (containertasks, args.n_workers,), asynchronous=args.asyncio, message = f"Asynchronous download of selected {args.n_containers} containers with {args.n_workers} worker ")
         else:
-            downloader(containertasks)
+            await time_function(downloader, (containertasks,), message=f"Synchronous download of selected {args.n_containers} containers ")
 
 
 if __name__ == "__main__":
