@@ -1,5 +1,7 @@
 # tex-live-installer
-Texlive package install script in python
+Texlive package install script in Python
+
+**!!! PROTOTYPE FOR EVALUATION !!!**
 
 
 # Performance challenges
