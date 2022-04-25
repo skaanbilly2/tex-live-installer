@@ -31,7 +31,7 @@ If CPU where to be a bottleneck, multiple process could be spun up with a subset
 
 SSD disk speed:
 
-![Crystaldiskmark SSD bench](/assets/images/SSD.jpg "Speedy SSD")
+![Crystaldiskmark SSD bench](/assets/images/SSD.png "Speedy SSD")
 
 # Results
 Note: At the moment I have not redid any of these test, as such some variation on these can be expected.
