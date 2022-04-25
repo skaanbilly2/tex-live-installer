@@ -61,12 +61,9 @@ This is the baseline, which should be comparable to the time for the installer
 |    seconds     | Seconds/container | Installed size/s|  Drive | Network bandwith | Notes |
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|-------------:|
  230.41 | 0.76 |  1.22 MB/s | SSD | 16 Mbps | |
- |
- | 207.59 | 0.7 |  1.36 MB/s | Ramdisk | 16 Mbps | |
+||
+| 207.59 | 0.7 |  1.36 MB/s | Ramdisk | 16 Mbps | |
 | 183.46 | 0.6 |  1.5 MB/s | Ramdisk | 50 Mbps | |
-
-|
-
 
 
 
@@ -109,22 +106,22 @@ Note: Speedup (based on Installed size/s) relative to the texlive gui installer
 | Name | Number of workers  |     seconds     | Speedup |  Installed size/s | Drive | Network bandwith | Notes |
 |----------|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|------:|
 | texlive gui installer | ? | 12000 | 100% | 0.6 MB/s | SSD | 16 Mbps | FULL INSTALL (3h 20m)
-|
+||
 | Sequential pooled( baseline) | 1 | 230.41 | 203% | 1.22 MB/s | SSD | 16 Mbps
-|
+||
 | Sequential pooled( baseline) | 1 | 207.59 | 226% | 1.36 MB/s | Ramdisk | 16 Mbps
 | Sequential pooled( baseline) | 1 | 183.46 | 250% | 1.50 MB/s | Ramdisk | 50 Mbps
-|
+||
 | Async Pooled | 1  | 155.20 | 300% | 1.80 MB/s | SSD | 16 Mbps
 | Async Pooled | 8  | 99.65  | 471% | 2.83 MB/s | SSD | 16 Mbps
-| 
+||
 | Async Pooled | 1  | 162.69 | 283% | 1.70 MB/s | Ramdisk | 16 Mbps 
 | Async Pooled | 8  |  93.28 | 500% | 3.00 MB/s | Ramdisk | 16 Mbps 
-|
+||
 | Async Pooled | 1  | 114.89 | 400% | 2.40 MB/s | Ramdisk | 50 Mbps 
 | Async Pooled | 8  | 66.12  | 717% | 4.30 MB/s | Ramdisk | 50 Mbps 
 | Async Pooled | 20 | 59.47  | 783% | 4.70 MB/s | Ramdisk | 50 Mbps 
-|
+||
 
 ## Remarks
 During testing, periods of network inactivity were found during the install, even in the asynchronous case. This leads me to believe that for the bigger containers a higher hash and extraction time stalls the other threads. Hence even a higher speedup could be attained, however this increases complexity.
