@@ -5,6 +5,7 @@ import random
 import pathlib
 import json
 import time
+from tex_live_installer.datastructures.downloadtask import DownloadTask
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,11 +16,16 @@ from tex_live_installer.downloaders.async_pooled_all import downloader_async
 from tex_live_installer.downloaders.seq_pooled import downloader
 from tex_live_installer.helpers.timetracker import TimeTracker
 
-DEFAULT_CONFIG_FILE_INSTALL = "config_install.json"
-DEFAULT_CONFIG_FILE_EXTRACT = "config_extract.json"
+DEFAULT_CONFIG_FILES = {
+    "install": "config_install.json",
+    "install_containers": "config_install_containers.json",
+    "extract_tlpdb": "config_extract.json",
+}
+
+DEFAULT_CONTAINER_FILE = "containertasks.json"
 
 
-async def time_function(func, args, asynchronous:bool=False, message:str=""):
+async def time_function(func, args, asynchronous: bool = False, message: str = ""):
     start = time.time()
     if asynchronous == True:
         await func(*args)
@@ -32,17 +38,21 @@ def update_args_from_configfile(args: argparse.Namespace):
     # Use the configs given in the configfile as a default
     with open(args.configfile, "r") as f:
         config_defaults = json.load(f)
-        not_None_dict = {
-            key: value for key, value in vars(args).items() if value is not None
+        cli_dict = {
+            key: value
+            for key, value in vars(args).items()
+            if value is not None or key not in config_defaults
         }
-        new_dict = {**config_defaults, **not_None_dict}
-        args = argparse.Namespace(**new_dict)
-        return args
+        new_dict = {**config_defaults, **cli_dict}
+
+        return argparse.Namespace(**new_dict)
 
 
 async def main():
     parser = argparse.ArgumentParser("python main.py")
-    parser.add_argument("command", type=str, choices=("extract_tlpdb", "install"))
+    parser.add_argument(
+        "command", type=str, choices=("extract_tlpdb", "install", "install_containers")
+    )
 
     ## FILE / LOCATION OPTIONS
     parser.add_argument("--configfile", type=str, help="configfile", default=None)
@@ -102,37 +112,66 @@ async def main():
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
+    if args.configfile is None:
+        args.configfile = DEFAULT_CONFIG_FILES[args.command]
+
+    args = update_args_from_configfile(args)
+
     if args.command == "extract_tlpdb":
-        if args.configfile is None:
-            args.configfile = DEFAULT_CONFIG_FILE_EXTRACT
-        args = update_args_from_configfile(args)
         extract_file(
             infile=pathlib.Path(args.inputfile), outfile=pathlib.Path(args.outputfile)
         )
-    elif args.command == "install":
-        if args.configfile is None:
-            args.configfile = DEFAULT_CONFIG_FILE_INSTALL
-        args = update_args_from_configfile(args)
+    elif args.command == "install" or args.command == "install_containers":
+        args.asyncio = args.asyncio == ("True")
 
-        args.asyncio = (args.asyncio == ("True"))
-
-        containertasks = get_containers(
-            filepath=pathlib.Path(args.inputfile),
-            mirror_url=args.mirror_base_url,
-            output_folder=pathlib.Path(args.installdir),
-        )
+        containertasks = []
+        if args.command == "install_containers":
+            if args.inputfile is None:
+                args.inputfile = DEFAULT_CONTAINER_FILE
+            with open(args.inputfile, "r") as f:
+                containertasks = json.load(f)
+                containertasks = [
+                    DownloadTask.from_dict(task_dict) for task_dict in containertasks
+                ]
+        else:
+            containertasks = get_containers(
+                filepath=pathlib.Path(args.inputfile),
+                mirror_url=args.mirror_base_url,
+                output_folder=pathlib.Path(args.installdir),
+            )
+        if False:
+            json_containertasks = [task.to_dict() for task in containertasks[0:20]]
+            with open(DEFAULT_CONTAINER_FILE, "w") as f:
+                json.dump(json_containertasks, f)
 
         if args.reshuffle == "True":
             random.shuffle(containertasks)
+        if args.n_containers is None:
+            args.n_containers = len(containertasks)
+
         containertasks = containertasks[: min(len(containertasks), args.n_containers)]
-        if args.asyncio :
-            await time_function(downloader_async, (containertasks, args.n_workers,), asynchronous=args.asyncio, message = f"Asynchronous download of selected {args.n_containers} containers with {args.n_workers} worker ")
+
+        if args.asyncio:
+            await time_function(
+                downloader_async,
+                (
+                    containertasks,
+                    args.n_workers,
+                ),
+                asynchronous=args.asyncio,
+                message=f"Asynchronous download of selected {args.n_containers} containers with {args.n_workers} worker ",
+            )
         else:
-            await time_function(downloader, (containertasks,), message=f"Synchronous download of selected {args.n_containers} containers ")
-        
+            await time_function(
+                downloader,
+                (containertasks,),
+                message=f"Synchronous download of selected {args.n_containers} containers ",
+            )
+
         # Save timetracker data
         with open("timings.json", "w") as f:
             json.dump(TimeTracker.time_measurements, f)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

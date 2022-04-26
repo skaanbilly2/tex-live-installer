@@ -27,7 +27,7 @@ def get_containers(
         for key in containerchecksums_keys:
             suffix = key_to_suffix[key]
             containername = f"{package['name']}{suffix}"
-            sizekey = key[:key.index("checksum")] + "size"
+            sizekey = key[: key.index("checksum")] + "size"
             url = f"{mirror_url}/{containername}.tar.xz"
             directory = base_folder / containername
             container_download.append(
@@ -36,7 +36,7 @@ def get_containers(
                     source_url=url,
                     target_dir=directory,
                     hash=package[key],
-                    size=package[sizekey]
+                    size=package[sizekey],
                 )
             )
 

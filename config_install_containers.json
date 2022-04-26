@@ -1,0 +1,5 @@
+{
+    "inputfile": "containertasks.json",
+    "asyncio": "False",
+    "n_workers": 1
+}
